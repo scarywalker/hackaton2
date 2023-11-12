@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Main Search Page</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                <button onclick="updateInformation()">Update Information</button>
+                <button onclick="addProject()">Add Project</button>
+                <button onclick="deleteProject()">Delete Project</button>
+                <button onclick="updateProject()">Update Project</button>
+                <div class="search-bar">
+                    <select id="searchCategory">
+                        <option value="location">Location</option>
+                        <option value="areaOfInterest">Area of Interest</option>
+                        <option value="name">Name</option>
+                    </select>
+                    <select id="searchType">
+                        <option value="project">Project</option>
+                        <option value="organization">Organization</option>
+                        <option value="person">Person</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="Search...">
+                    <button onclick="performSearch()">Search</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="search-results">
+            <!-- Example result divs -->
+            <div class="result-box">
+                <h3>Result 1</h3>
+                <p>Description of the result...</p>
+            </div>
+            <div class="result-box">
+                <h3>Result 2</h3>
+                <p>Description of the result...</p>
+            </div>
+            <!-- Add more result divs as needed -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/your-username" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/your-username" target="_blank">LinkedIn</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
