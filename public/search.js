@@ -1,6 +1,7 @@
 const resultsDiv = document.querySelector(".search-results");
 const searchType = document.getElementById("searchType");
 const searchInput = document.getElementById("searchInput");
+const isOrg = false;
 const data = [
   {
     organization_id: 1,
@@ -166,24 +167,164 @@ function filterInput() {
   }
 }
 
+function closePopup() {
+  const container = document.querySelector(".popup-container");
+  document.body.removeChild(container);
+  document.body.classList.remove("no-scroll");
+}
+
 function updateInformation() {
-  // Add logic for updating information
-  console.log("Updating Information");
+  const container = document.createElement("div");
+  container.className = "popup-container";
+  const content = document.createElement("div");
+  content.className = "container";
+  userText = `
+    <label for="availableLocations">Available Locations:</label>
+    <input type="text" id="availableLocations">
+    `;
+  if (isOrg) userText = "";
+
+  content.innerHTML = `
+      <button class="close-button" onclick="closePopup()">&times;</button>
+      <h1>Organization Registration</h1>
+      <form id="organizationRegistrationForm">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" required>  
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>  
+        <label for="contactTelephone">Contact Telephone:</label>
+        <input type="tel" id="contactTelephone" required>  
+        <label for="areasOfInterest">Areas of Interest:</label>
+        <input type="text" id="areasOfInterest">${userText}
+        <button type="submit">Register</button>
+      </form>
+    `;
+
+  container.appendChild(content);
+  document.body.appendChild(container);
+  document.body.classList.add("no-scroll");
 }
 
 function addProject() {
-  // Add logic for adding a project
-  console.log("Adding Project");
+  const container = document.createElement("div");
+  container.className = "popup-container";
+  const content = document.createElement("div");
+  content.className = "container";
+  content.innerHTML = `
+        <button class="close-button" onclick="closePopup()">&times;</button>
+        <h1>Add Project</h1>
+        <form id="addProjectForm">
+          <label for="title">Title:</label>
+          <input type="text" id="title" required>
+          <label for="description">Description:</label>
+          <textarea rows="4" cols="50" id="description" required>  </textarea>
+          <label for="areasOfInterest">Areas of Interest:</label>
+          <input type="text" id="areasOfInterest">
+          <label for="availableLocations">Available Locations:</label>        
+          <input type="text" id="availableLocations">
+          <button type="submit">Register</button>
+        </form>
+      `;
+
+  container.appendChild(content);
+  document.body.appendChild(container);
+  document.body.classList.add("no-scroll");
 }
 
 function deleteProject() {
-  // Add logic for deleting a project
-  console.log("Deleting Project");
+  const projects = [
+    { title: "thing 1" },
+    { title: "thing 2" },
+    // Add more objects as needed
+  ];
+
+  const container = document.createElement("div");
+  container.className = "popup-container";
+  const content = document.createElement("div");
+  content.className = "container";
+
+  const checkboxes = projects.map((project) => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = project.title.toLowerCase().replace(/\s/g, ""); // Generate unique IDs
+    checkbox.value = project.title;
+    const label = document.createElement("label");
+    label.setAttribute("for", checkbox.id);
+    label.innerText = `${project.title}`;
+
+    return [checkbox, label];
+  });
+
+  content.innerHTML = `
+        <button class="close-button" onclick="closePopup()">&times;</button>
+        <h1>Delete Project</h1>
+        <form id="addProjectForm">            
+            <div id="projectCheckboxes">
+                ${checkboxes
+                  .map((checkbox) =>
+                    checkbox.map((el) => el.outerHTML).join("")
+                  )
+                  .join("")}
+            </div>
+            <button type="submit">Delete</button>
+        </form>
+    `;
+
+  container.appendChild(content);
+  document.body.appendChild(container);
+  document.body.classList.add("no-scroll");
 }
 
 function updateProject() {
-  // Add logic for updating a project
-  console.log("Updating Project");
+  const projects = [
+    { title: "project 1" },
+    { title: "project 2" },
+    // Add more objects as needed
+  ];
+
+  const container = document.createElement("div");
+  container.className = "popup-container";
+  const content = document.createElement("div");
+  content.className = "container";
+
+  const radioButtons = projects.map((project, index) => {
+    const radioButton = document.createElement("input");
+    radioButton.type = "radio";
+    radioButton.name = "project"; // Ensure they share the same name to make them exclusive
+    radioButton.id = `project-${index}`;
+    radioButton.value = project.title;
+    const label = document.createElement("label");
+    label.setAttribute("for", radioButton.id);
+    label.innerText = `${project.title}`;
+
+    return [radioButton, label];
+  });
+
+  content.innerHTML = `
+        <button class="close-button" onclick="closePopup()">&times;</button>
+        <h1>Add Project</h1>
+        <form id="addProjectForm">
+        <div id="projectRadioButtons">
+            ${radioButtons
+              .map((radioButton) =>
+                radioButton.map((el) => el.outerHTML).join("")
+              )
+              .join("")}
+        </div>
+            <label for="title">New Title:</label>
+            <input type="text" id="title" required>
+            <label for="description">New Description:</label>
+            <textarea rows="4" cols="50" id="description" required></textarea>
+            <label for="areasOfInterest">New Areas of Interest:</label>
+            <label for="availableLocations">Available Locations:</label>        
+            <input type="text" id="availableLocations">
+            <button type="submit">Register</button>
+        </form>
+    `;
+
+  container.appendChild(content);
+  document.body.appendChild(container);
+  document.body.classList.add("no-scroll");
 }
 
 appendBoxes(data);
@@ -191,3 +332,4 @@ appendBoxes(data);
 filterInput();
 searchType.addEventListener("input", filterInput);
 searchInput.addEventListener("input", filterInput);
+createRegistrationPopup();
