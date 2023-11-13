@@ -1,10 +1,10 @@
-// const {
-//     _getAllOrgs,
-//     _getOneOrg,
-//     _addOrg,
-//     _updateOrg,
-//     _logOrg,
-//   } = require("../models/model.users.js");
+const {
+    _getAllOrgs,
+    _getOneOrg,
+    _addOrg,
+    _updateOrg,
+    _logOrg,
+  } = require("../models/orgs.model.js");
   
   const getAllOrgs = async (req, res) => {
     try {
@@ -33,9 +33,9 @@
   
   const registerOrg = async (req, res) => {
     console.log("body=>", req.body);
-    const { username, password, email, first_name, last_name } = req.body;
+    const { username, password, full_name, email, contact_telephone, areas_of_interest } = req.body;
     try {
-      await _addOrg(username, password, email, first_name, last_name);
+      await _addOrg(username, password, full_name, email, contact_telephone, areas_of_interest);
       getAllOrgs(req, res);
     } catch (e) {
       console.log(e);
@@ -67,9 +67,9 @@
   
   const updateOrg = async (req, res) => {
     const { id } = req.params;
-    const { email, first_name, last_name } = req.body;
+    const { full_name, email, contact_telephone, areas_of_interest } = req.body;
     try {
-      const dataToUpdate = { email, first_name, last_name };
+      const dataToUpdate = { full_name, email, contact_telephone, areas_of_interest };
       await _updateOrg(id, dataToUpdate);
       getAllOrgs(req, res);
     } catch (e) {
