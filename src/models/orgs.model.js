@@ -10,7 +10,14 @@ const _getOneOrg = (id) => {
   return db("organization_table").select("*").where({ id });
 };
 
-const _addOrg = async (username, password, full_name, email, contact_telephone, areas_of_interest) => {
+const _addOrg = async (
+  username,
+  password,
+  full_name,
+  email,
+  contact_telephone,
+  areas_of_interest
+) => {
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     await db.transaction(async (trx) => {
@@ -18,7 +25,13 @@ const _addOrg = async (username, password, full_name, email, contact_telephone, 
         { username, password: hashedPassword },
         ["id", "username"]
       );
-      await trx("organization_table").insert({ username, full_name, email, contact_telephone, areas_of_interest });
+      await trx("organization_table").insert({
+        username,
+        full_name,
+        email,
+        contact_telephone,
+        areas_of_interest,
+      });
     });
     return "Org added successfully";
   } catch (error) {

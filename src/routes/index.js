@@ -15,10 +15,10 @@ router.post("/orgs/register", controllerOrgs.registerOrg);
 router.post("/orgs/login", controllerOrgs.loginOrg);
 router.put("/orgs/:id", controllerOrgs.updateOrg);
 
-// router.get("/projects/", controllerProjects.getAllProjects);
-// router.get("/projects/:id", controllerProjects.getProjectById);
-// router.post("/projects/register", controllerProjects.registerProject);
-// router.post("/projects/login", controllerProjects.loginProject);
-// router.put("/projects/:id", controllerProjects.updateProject);
+router.get("/projects/", controllerProjects.getProjects);
+router.get("/projects/:id", controllerProjects.getProjectId);
+router.post("/projects/", controllerProjects.addProject);
+router.delete("/projects/:id", controllerProjects.deleteProject);
+router.put("/projects/:id", controllerProjects.updateProject);
 
 module.exports = router;

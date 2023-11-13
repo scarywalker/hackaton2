@@ -10,7 +10,15 @@ const _getOneUser = (id) => {
   return db("user_table").select("*").where({ id });
 };
 
-const _addUser = async (username, password, full_name, email, contact_telephone, areas_of_interest, available_locations) => {
+const _addUser = async (
+  username,
+  password,
+  full_name,
+  email,
+  contact_telephone,
+  areas_of_interest,
+  available_locations
+) => {
   try {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     await db.transaction(async (trx) => {
@@ -18,7 +26,14 @@ const _addUser = async (username, password, full_name, email, contact_telephone,
         { username, password: hashedPassword },
         ["id", "username"]
       );
-      await trx("user_table").insert({ username, full_name, email, contact_telephone, areas_of_interest, available_locations });
+      await trx("user_table").insert({
+        username,
+        full_name,
+        email,
+        contact_telephone,
+        areas_of_interest,
+        available_locations,
+      });
     });
     return "User added successfully";
   } catch (error) {
