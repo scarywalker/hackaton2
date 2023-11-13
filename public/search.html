@@ -12,23 +12,22 @@
     <header>
         <nav>
             <div class="navbar">
-                <button onclick="updateInformation()">Update Information</button>
-                <button onclick="addProject()">Add Project</button>
-                <button onclick="deleteProject()">Delete Project</button>
-                <button onclick="updateProject()">Update Project</button>
+                <button id="change" onclick="updateInformation()">Update Information</button>
+                <button id="add" onclick="addProject()">Add Project</button>
+                <button id="delete" onclick="deleteProject()">Delete Project</button>
+                <button id="update" onclick="updateProject()">Update Project</button>
                 <div class="search-bar">
-                    <select id="searchCategory">
+                    <!-- <select id="searchCategory">
                         <option value="location">Location</option>
                         <option value="areaOfInterest">Area of Interest</option>
                         <option value="name">Name</option>
-                    </select>
+                    </select> -->
                     <select id="searchType">
                         <option value="project">Project</option>
                         <option value="organization">Organization</option>
                         <option value="person">Person</option>
                     </select>
                     <input type="text" id="searchInput" placeholder="Search...">
-                    <button onclick="performSearch()">Search</button>
                 </div>
             </div>
         </nav>
