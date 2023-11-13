@@ -30,25 +30,21 @@ button:hover {
     opacity: 0.9;
 }
 
-/* Update Information button (yellow) */
 button:nth-child(1) {
     background-color: #ffcc00;
     color: #000;
 }
 
-/* Add Project button (green) */
 button:nth-child(2) {
     background-color: #4caf50;
     color: #fff;
 }
 
-/* Delete Project button (red) */
 button:nth-child(3) {
     background-color: #ff3333;
     color: #fff;
 }
 
-/* Update Project button (blue) */
 button:nth-child(4) {
     background-color: #3366cc;
     color: #fff;
@@ -79,12 +75,17 @@ main {
     gap: 20px;
 }
 
-.result-box {
+.organization, .project, .person {
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
+    display: none
+}
+
+.correct{
+    display: block;
 }
 
 footer {
