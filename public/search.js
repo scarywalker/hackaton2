@@ -131,8 +131,6 @@ function appendBoxes(dataArray) {
       box.className = "result-box project";
     } else if (obj.available_locations !== undefined) {
       const {
-        id,
-        username,
         full_name,
         email,
         contact_telephone,
