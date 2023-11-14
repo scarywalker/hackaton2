@@ -40,16 +40,19 @@ button:hover {
 #add {
     background-color: #4caf50;
     color: #fff;
+    display: none;
 }
 
 #delete {
     background-color: #ff3333;
     color: #fff;
+    display: none;
 }
 
 #update {
     background-color: #3366cc;
     color: #fff;
+    display: none;
 }
 
 .search-bar {

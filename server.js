@@ -3,8 +3,9 @@ const app = express();
 const routes = require("./src/routes/index");
 const PORT = 5000;
 
-app.use(express.static("./public"));
+// app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/", express.static(__dirname + "/public"));
 
 app.use("/", routes);
 

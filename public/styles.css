@@ -77,7 +77,6 @@ input[type="radio"] {
     margin-right: 5px;
 }
 
-/* Style for radio button label */
 label[for="user"],
 label[for="organization"] {
     margin-right: 15px;
