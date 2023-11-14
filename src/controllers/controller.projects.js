@@ -33,9 +33,9 @@ const getProjectId = async (req, res) => {
 
 const addProject = async (req, res) => {
   console.log("body=>", req.body);
-  const { organization_id, title, description, location } = req.body;
+  const { username, title, description, location } = req.body;
   try {
-    await _addProject({ organization_id, title, description, location });
+    await _addProject({ username, title, description, location });
     getProjects(req, res);
   } catch (e) {
     console.log(e);

@@ -8,10 +8,10 @@ const _getOneProject = (id) => {
   return db("projects_table").select("*").where({ id });
 };
 
-const _addProject = ({ organization_id, title, description, location }) => {
+const _addProject = ({ username, title, description, location }) => {
   return db("projects_table").insert(
-    { organization_id, title, description, location },
-    ["id", "organization_id", "title", "description", "location"]
+    { username, title, description, location },
+    ["id", "username", "title", "description", "location"]
   );
 };
 
@@ -20,6 +20,7 @@ const _updateProject = (id, title, description, location) => {
     .where({ id })
     .update({ title, description, location }, [
       "id",
+      "username",
       "title",
       "description",
       "location",
