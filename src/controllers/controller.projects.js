@@ -18,10 +18,10 @@ const getProjects = async (req, res) => {
 
 const getProjectId = async (req, res) => {
   console.log("params=>", req.params);
-  const { id } = req.params;
+  const { username } = req.params;
 
   try {
-    const data = await _getOneProject(id);
+    const data = await _getOneProject(username);
     if (data.length === 0)
       return res.status(404).json({ msg: "No Project Found" });
     res.json(data);

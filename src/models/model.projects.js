@@ -4,8 +4,8 @@ const _getAllProjects = () => {
   return db("projects_table").select("*").orderBy("id");
 };
 
-const _getOneProject = (id) => {
-  return db("projects_table").select("*").where({ id });
+const _getOneProject = (username) => {
+  return db("projects_table").select("*").where({ username });
 };
 
 const _addProject = ({ username, title, description, location }) => {

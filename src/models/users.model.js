@@ -6,8 +6,8 @@ const _getAllUsers = () => {
   return db("user_table").select("*").orderBy("id");
 };
 
-const _getOneUser = (id) => {
-  return db("user_table").select("*").where({ id });
+const _getOneUser = (username) => {
+  return db("user_table").select("*").where({ username });
 };
 
 const _addUser = async (

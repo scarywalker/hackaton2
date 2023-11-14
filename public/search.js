@@ -6,6 +6,7 @@ const deleteButton = document.getElementById("delete");
 const updateButton = document.getElementById("update");
 let userType, username;
 const isOrg = !(userType === "user");
+let data;
 
 const fetchData = async () => {
   try {
@@ -18,56 +19,62 @@ const fetchData = async () => {
     const projectsResponse = await fetch("/projects/");
     const projectsData = await projectsResponse.json();
 
-    const allData = [...usersData, ...orgsData, ...projectsData];
-
-    console.log(allData);
+    return [...usersData, ...orgsData, ...projectsData];
   } catch (error) {
     console.error("Error fetching data:", error);
+    throw error;
   }
 };
 
-const data = fetchData();
-console.log(data)
-
-if (isOrg === true) {
-  addButton.style.display = "block";
-  deleteButton.style.display = "block";
-  updateButton.style.display = "block";
-}
-
 document.addEventListener("DOMContentLoaded", function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  let username = urlParams.get("username");
-  let userType = urlParams.get("userType");
-  return { username: username, userType: userType };
+  fetchData().then((fetchedData) => {
+    console.log(fetchedData);
+
+    if (isOrg === true) {
+      addButton.style.display = "block";
+      deleteButton.style.display = "block";
+      updateButton.style.display = "block";
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let username = urlParams.get("username");
+    let userType = urlParams.get("userType");
+
+    let data = fetchedData;
+    appendBoxes(data);
+
+    return { username: username, userType: userType };
+  });
 });
 
 function appendBoxes(dataArray) {
-  dataArray.forEach((obj) => {
-    const box = document.createElement("div");
+  if (dataArray) {
+    dataArray.forEach((obj) => {
+      console.log(obj);
+      const box = document.createElement("div");
+      if (obj.title) {
+        const {username, title, location, description } = obj;
+        box.innerHTML = `<p>Organization: ${username}</p><p>Title: ${title}</p><p>Location: ${location}</p><p>Description: ${description}</p>`;
+        box.className = "result-box project";
+      } else if (obj.available_locations) {
+        const {
+          full_name,
+          email,
+          contact_telephone,
+          areas_of_interest,
+          available_locations,
+        } = obj;
+        box.innerHTML = `<p>Name: ${full_name}</p><p>Email: ${email}</p><p>Contact Telephone: ${contact_telephone}</p><p>Areas of Interest: ${areas_of_interest}</p><p>Available Locations: ${available_locations}</p>`;
+        box.className = "result-box person";
+      } else if (obj.full_name) {
+        const { full_name, email, contact_telephone, areas_of_interest } = obj;
+        box.innerHTML = `<p>Name: ${full_name}</p><p>Email: ${email}</p><p>Contact Telephone: ${contact_telephone}</p><p>Areas of Interest: ${areas_of_interest}</p>`;
+        box.className = "result-box organization";
+      }
 
-    if (obj.organization_id !== undefined) {
-      const { title, location, description } = obj;
-      box.innerHTML = `<p>Title: ${title}</p><p>Location: ${location}</p><p>Description: ${description}</p>`;
-      box.className = "result-box project";
-    } else if (obj.available_locations !== undefined) {
-      const {
-        full_name,
-        email,
-        contact_telephone,
-        areas_of_interest,
-        available_locations,
-      } = obj;
-      box.innerHTML = `<p>Name: ${full_name}</p><p>Email: ${email}</p><p>Contact Telephone: ${contact_telephone}</p><p>Areas of Interest: ${areas_of_interest}</p><p>Available Locations: ${available_locations}</p>`;
-      box.className = "result-box person";
-    } else if (obj.full_name !== undefined) {
-      const { full_name, email, contact_telephone, areas_of_interest } = obj;
-      box.innerHTML = `<p>Name: ${full_name}</p><p>Email: ${email}</p><p>Contact Telephone: ${contact_telephone}</p><p>Areas of Interest: ${areas_of_interest}</p>`;
-      box.className = "result-box organization";
-    }
-
-    resultsDiv.appendChild(box);
-  });
+      resultsDiv.appendChild(box);
+    });
+  }
 }
 
 function filterInput() {
@@ -246,8 +253,6 @@ function updateProject() {
   document.body.appendChild(container);
   document.body.classList.add("no-scroll");
 }
-
-appendBoxes(data);
 
 filterInput();
 searchType.addEventListener("input", filterInput);

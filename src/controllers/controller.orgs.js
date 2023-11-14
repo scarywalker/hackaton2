@@ -18,10 +18,10 @@ const getAllOrgs = async (req, res) => {
 
 const getOrgById = async (req, res) => {
   console.log("params=>", req.params);
-  const { id } = req.params;
+  const { username } = req.params;
 
   try {
-    const data = await _getOneOrg(id);
+    const data = await _getOneOrg(username);
     if (data.length === 0) return res.status(404).json({ msg: "No Org Found" });
     res.json(data);
   } catch (e) {

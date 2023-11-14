@@ -6,8 +6,8 @@ const _getAllOrgs = () => {
   return db("organization_table").select("*").orderBy("id");
 };
 
-const _getOneOrg = (id) => {
-  return db("organization_table").select("*").where({ id });
+const _getOneOrg = (username) => {
+  return db("organization_table").select("*").where({ username });
 };
 
 const _addOrg = async (
