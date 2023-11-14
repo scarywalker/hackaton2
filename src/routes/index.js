@@ -16,7 +16,7 @@ router.post("/orgs/login", controllerOrgs.loginOrg);
 router.put("/orgs/:id", controllerOrgs.updateOrg);
 
 router.get("/projects/", controllerProjects.getProjects);
-router.get("/projects/:username", controllerProjects.getProjectId);
+router.get("/projects/:title", controllerProjects.getProjectId);
 router.post("/projects/", controllerProjects.addProject);
 router.delete("/projects/:id", controllerProjects.deleteProject);
 router.put("/projects/:id", controllerProjects.updateProject);

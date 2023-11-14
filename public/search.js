@@ -4,10 +4,7 @@ const searchInput = document.getElementById("searchInput");
 const addButton = document.getElementById("add");
 const deleteButton = document.getElementById("delete");
 const updateButton = document.getElementById("update");
-let userType, username;
-const isOrg = !(userType === "user");
-let data;
-
+let userType, username, data, baseUrl;
 const fetchData = async () => {
   try {
     const usersResponse = await fetch("/users/");
@@ -26,14 +23,15 @@ const fetchData = async () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-  fetchData().then((fetchedData) => {
+const initializePage = async () => {
+  try {
+    const fetchedData = await fetchData();
 
     const urlParams = new URLSearchParams(window.location.search);
-    let username = urlParams.get("username");
-    let userType = urlParams.get("userType");
+    username = urlParams.get("username");
+    userType = urlParams.get("userType");
 
-    let data = fetchedData;
+    data = fetchedData;
     appendBoxes(data);
 
     if (userType !== "user") {
@@ -41,10 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
       deleteButton.style.display = "block";
       updateButton.style.display = "block";
     }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
 
-    return { username: username, userType: userType };
-  });
-});
+document.addEventListener("DOMContentLoaded", initializePage);
 
 function appendBoxes(dataArray) {
   if (dataArray) {
@@ -105,22 +105,22 @@ function updateInformation() {
   content.className = "container";
   userText = `
     <label for="availableLocations">Available Locations:</label>
-    <input type="text" id="availableLocations">
+    <input type="text" id="available_locations">
     `;
-  if (isOrg) userText = "";
+  if (userType !== "user") userText = "";
 
   content.innerHTML = `
       <button class="close-button" onclick="closePopup()">&times;</button>
-      <h1>Organization Registration</h1>
-      <form id="organizationRegistrationForm">
+      <h1>Change information</h1>
+      <form id="registrationForm">
         <label for="fullName">Full Name:</label>
-        <input type="text" id="fullName" required>  
+        <input type="text" id="full_name" required>  
         <label for="email">Email:</label>
         <input type="email" id="email" required>  
         <label for="contactTelephone">Contact Telephone:</label>
-        <input type="tel" id="contactTelephone" required>  
+        <input type="tel" id="contact_telephone" required>  
         <label for="areasOfInterest">Areas of Interest:</label>
-        <input type="text" id="areasOfInterest">${userText}
+        <input type="text" id="areas_of_interest">${userText}
         <button type="submit">Register</button>
       </form>
     `;
@@ -128,11 +128,54 @@ function updateInformation() {
   container.appendChild(content);
   document.body.appendChild(container);
   document.body.classList.add("no-scroll");
+
+  const registrationForm = document.getElementById("registrationForm");
+
+  registrationForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const full_name = document.getElementById("full_name").value;
+    const email = document.getElementById("email").value;
+    const contact_telephone =
+      document.getElementById("contact_telephone").value;
+    const areas_of_interest =
+      document.getElementById("areas_of_interest").value;
+    let available_locations;
+    try {
+      available_locations = document.getElementById(
+        "available_locations"
+      ).value;
+    } catch {
+      null;
+    }
+    let formData;
+
+    if (available_locations) {
+      formData = {
+        full_name,
+        email,
+        contact_telephone,
+        areas_of_interest,
+        available_locations,
+      };
+    } else {
+      formData = {
+        full_name,
+        email,
+        contact_telephone,
+        areas_of_interest,
+      };
+    }
+
+    try {
+      await performUpdate(formData);
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  });
 }
 
 async function fetchDataChange(username) {
-  const baseUrl = isOrg ? "/orgs" : "/users";
-
+  baseUrl = userType !== "user" ? "/orgs" : "/users";
   try {
     const response = await fetch(`${baseUrl}/${username}`);
     const data = await response.json();
@@ -143,9 +186,20 @@ async function fetchDataChange(username) {
   }
 }
 
+async function fetchProjectId (title) {
+  try {
+    const response = await fetch(`projects/${title}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to fetch data");
+  }
+}
+
 async function updateData(id, newData) {
   try {
-    const response = await fetch(`/users/${id}`, {
+    const response = await fetch(`${baseUrl}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -163,8 +217,8 @@ async function updateData(id, newData) {
 
 async function performUpdate(newData) {
   try {
-    const fetchedData = await fetchData(username);
-    const id = fetchedData.id;
+    const fetchedData = await fetchDataChange(username);
+    const id = fetchedData[0].id;
     await updateData(id, newData);
   } catch (error) {
     console.error(error.message);
@@ -198,11 +252,14 @@ function addProject() {
 }
 
 function deleteProject() {
-  const projects = [
-    { title: "thing 1" },
-    { title: "thing 2" },
-    // Add more objects as needed
-  ];
+  const projects = [];
+  data.forEach((obj) => {
+    if (obj.title) {
+      if (obj.username === username) {
+        projects.push({ title: obj.title });
+      }
+    }
+  });
 
   const container = document.createElement("div");
   container.className = "popup-container";
@@ -242,11 +299,14 @@ function deleteProject() {
 }
 
 function updateProject() {
-  const projects = [
-    { title: "project 1" },
-    { title: "project 2" },
-    // Add more objects as needed
-  ];
+  const projects = [];
+  data.forEach((obj) => {
+    if (obj.title) {
+      if (obj.username === username) {
+        projects.push({ title: obj.title });
+      }
+    }
+  });
 
   const container = document.createElement("div");
   container.className = "popup-container";
