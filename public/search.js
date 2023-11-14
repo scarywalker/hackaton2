@@ -28,13 +28,6 @@ const fetchData = async () => {
 
 document.addEventListener("DOMContentLoaded", function () {
   fetchData().then((fetchedData) => {
-    console.log(fetchedData);
-
-    if (isOrg === true) {
-      addButton.style.display = "block";
-      deleteButton.style.display = "block";
-      updateButton.style.display = "block";
-    }
 
     const urlParams = new URLSearchParams(window.location.search);
     let username = urlParams.get("username");
@@ -43,6 +36,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let data = fetchedData;
     appendBoxes(data);
 
+    if (userType !== "user") {
+      addButton.style.display = "block";
+      deleteButton.style.display = "block";
+      updateButton.style.display = "block";
+    }
+
     return { username: username, userType: userType };
   });
 });
@@ -50,10 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
 function appendBoxes(dataArray) {
   if (dataArray) {
     dataArray.forEach((obj) => {
-      console.log(obj);
       const box = document.createElement("div");
       if (obj.title) {
-        const {username, title, location, description } = obj;
+        const { username, title, location, description } = obj;
         box.innerHTML = `<p>Organization: ${username}</p><p>Title: ${title}</p><p>Location: ${location}</p><p>Description: ${description}</p>`;
         box.className = "result-box project";
       } else if (obj.available_locations) {
@@ -130,6 +128,47 @@ function updateInformation() {
   container.appendChild(content);
   document.body.appendChild(container);
   document.body.classList.add("no-scroll");
+}
+
+async function fetchDataChange(username) {
+  const baseUrl = isOrg ? "/orgs" : "/users";
+
+  try {
+    const response = await fetch(`${baseUrl}/${username}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to fetch data");
+  }
+}
+
+async function updateData(id, newData) {
+  try {
+    const response = await fetch(`/users/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newData),
+    });
+
+    const updatedData = await response.json();
+    console.log("Updated data:", updatedData);
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to update data");
+  }
+}
+
+async function performUpdate(newData) {
+  try {
+    const fetchedData = await fetchData(username);
+    const id = fetchedData.id;
+    await updateData(id, newData);
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 function addProject() {
